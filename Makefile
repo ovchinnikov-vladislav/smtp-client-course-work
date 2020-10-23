@@ -1,35 +1,41 @@
 BUILD_DIR=build
 BIN_DIR=$(BUILD_DIR)/bin
-SRC_DIR=.
+OBJ_DIR=$(BUILD_DIR)/obj
+SRC_DIR=src/main
 
 CC=gcc
 
-SERVER_O=$(BUILD_DIR)/server.o
-CLIENT_O=$(BUILD_DIR)/client.o
-
-SERVER_C=$(SRC_DIR)/server.c
-CLIENT_C=$(SRC_DIR)/client.c
+CLIENT_O=$(OBJ_DIR)/smtp-client.o
+CLIENT_C=$(SRC_DIR)/main.c
 
 clear:
 	rm -R $(BUILD_DIR) -f
-	rm -R $(BIN_DIR) -f
 
 mkd: clear
-	mkdir $(BUILD_DIR)
 	mkdir $(BIN_DIR)
+	mkdir $(OBJ_DIR)
 
-compile_server: mkd
-	$(CC) $(SERVER_C) -c -o $(SERVER_O)
+compile: mkd
+	$(CC) $(CLIENT_C) -c -o $(CLIENT_O) -Wall -Werror
 
-compile_client: mkd
-	$(CC) $(CLIENT_C) -c -o $(CLIENT_O)
+link: compile
+	$(CC) -o $(BIN_DIR)/smtp-client.bin $(CLIENT_O)
 
-compile_all: compile_server compile_client
+# Остальные стадии требуется дописать
+# test_units: link
+# 	...
 
-link_server: compile_server
-	$(CC) -o $(BIN_DIR)/server.bin $(SERVER_O)
+# test_memory: link
+# 	...
 
-link_client: compile_client
-	$(CC) -o $(BIN_DIR)/client.bin $(CLIENT_O)
+# test_system: link
+# 	...
 
-link_all: link_server link_client
+# test_style: link
+# 	...
+
+# tests: test_units, test_memory, test_system, test_style
+# 	...
+
+# report: tests
+# 	...
